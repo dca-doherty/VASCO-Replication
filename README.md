@@ -6,7 +6,7 @@ Author: Brian Doherty
 Contact: briandohertyresearch@gmail.com
 Date: January 2026
 
----
+--
 
 ## Purpose
 
@@ -17,30 +17,15 @@ Two analyses are included
 1. Nuclear test window correlation (chi-square, negative binomial regression, permutation testing)
 2. Earth shadow deficit analysis (geometric shadow classification of transient positions)
 
----
-
-## Contents
-
-```
-validation_replication/
-    nuclear_transient_correlation.py    Chi-square, negative binomial, permutation tests
-    earth_shadow_validation.py          Earth shadow geometry and transient classification
-    VALIDATION_METHODOLOGY.md           Full methodology documentation
-    data/                               Original datasets (not included in public repo)
-    results/                            Output directory (created when scripts run)
-```
-
 ### Data (Not Included)
 
 The data folder contains the original research datasets and is not included in the public repository per agreement with the data providers. If you need access to the datasets to reproduce the analysis, please contact Dr. Stephen Bruehl at Vanderbilt University Medical Center or Dr. Beatriz Villarroel at Stockholm University.
 
 The scripts expect three files in the data folder:
 
-`Transient_Nuclear_Analyzed_Dataset_ScientificReports.xlsx` -- Original transient dataset from Dr. Bruehl, containing daily transient counts from POSS-I plates (November 1949 through April 1957, 2,718 days)
-`SUPERVIKTIG_HELAVASCO.csv` -- VASCO transient catalog with source positions and plate metadata
-`SUPERVIKTIG_HELAVASCO_validated_v4.csv` -- Validated subset of the VASCO catalog
-
----
+`Transient_Nuclear_Analyzed_Dataset_ScientificReports.xlsx` Original transient dataset from Dr. Bruehl, containing daily transient counts from POSS-I plates (November 1949 through April 1957, 2,718 days)
+`SUPERVIKTIG_HELAVASCO.csv` VASCO transient catalog with source positions and plate metadata
+`SUPERVIKTIG_HELAVASCO_validated_v4.csv` Validated subset of the VASCO catalog
 
 ## Requirements
 
@@ -61,8 +46,6 @@ Install with
 pip install pandas numpy scipy statsmodels astropy openpyxl
 ```
 
----
-
 ## How to Run
 
 From this directory
@@ -73,8 +56,6 @@ python earth_shadow_validation.py
 ```
 
 Both scripts print results to the console and save output files to the `results/` subfolder. The random seed is fixed at 42 for reproducibility of permutation tests.
-
----
 
 ## What the Scripts Do
 
@@ -101,8 +82,6 @@ The script calculates the Sun position for each observation time using standard 
 Output files
 `results/shadow_classification.csv` -- Full classification of all transients
 `results/umbra_transients.csv` -- Only the transients falling inside the shadow
-
----
 
 ## Replicated Results
 
@@ -154,13 +133,9 @@ The finding survives edge artifact removal with increased statistical significan
 
 Shadow transient rate (0.22%) is significantly below geometric expectation (~1.4%), consistent with the original findings. All 50 shadow transients predate artificial satellites (earliest: February 1949, latest: April 1956, all before Sputnik in October 1957).
 
----
-
 ## Methodology
 
 See `VALIDATION_METHODOLOGY.md` in this folder for the complete methodology documentation, including detailed descriptions of the statistical tests, assumptions, shadow geometry calculations, and how results compare to the original paper at each step.
-
----
 
 ## Data Sources
 
@@ -169,15 +144,11 @@ Transient data: Provided by Dr. Stephen Bruehl (Vanderbilt University Medical Ce
 VASCO catalog: VASCO project (Villarroel et al.)
 Solar position calculations: Astropy library using standard Meeus algorithms
 
----
-
 ## Citation
 
 If you use this validation package, please cite:
 
 Bruehl, S. and Villarroel, B. (2025). "Transients in the Palomar Observatory Sky Survey (POSS-I) may be associated with nuclear testing and reports of unidentified anomalous phenomena." Scientific Reports, 15, 34125.
-
----
 
 ## Contact
 
