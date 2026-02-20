@@ -1,0 +1,4 @@
+test,statistic,p_value,status
+Chi-square,"chi2=6.473, RR=1.45",0.01095375698223428,Confirmed
+Negative Binomial (controlled),IRR=1.269,6.128640016520547e-32,Confirmed
+Permutation,RR=1.447,0.0055,Robust

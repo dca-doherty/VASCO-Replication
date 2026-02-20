@@ -1,0 +1,21 @@
+                 Generalized Linear Model Regression Results                  
+==============================================================================
+Dep. Variable:       Total_Transients   No. Observations:                 2718
+Model:                            GLM   Df Residuals:                     2712
+Model Family:        NegativeBinomial   Df Model:                            5
+Link Function:                    Log   Scale:                          1.0000
+Method:                          IRLS   Log-Likelihood:                -10797.
+Date:                Fri, 20 Feb 2026   Deviance:                       17652.
+Time:                        02:19:40   Pearson chi2:                 6.56e+04
+No. Iterations:                    18   Pseudo R-squ. (CS):             0.7636
+Covariance Type:            nonrobust                                         
+==============================================================================================================
+                                                 coef    std err          z      P>|z|      [0.025      0.975]
+--------------------------------------------------------------------------------------------------------------
+const                                          2.9217      0.021    142.384      0.000       2.881       2.962
+Nuclear_Testing_YN_Window_Plus_Minus_1_Day     0.2384      0.020     11.762      0.000       0.199       0.278
+Independent_UFOCAT_Sightings_Per_Date          0.2214      0.020     10.830      0.000       0.181       0.261
+moon_illumination                             -1.5451      0.021    -73.939      0.000      -1.586      -1.504
+cloud_cover_estimate                          -0.1013      0.021     -4.767      0.000      -0.143      -0.060
+media_coverage                                 0.0875      0.021      4.166      0.000       0.046       0.129
+==============================================================================================================
