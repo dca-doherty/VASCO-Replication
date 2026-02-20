@@ -50,7 +50,7 @@ Results are saved to the results/ subfolder within this directory.
 Methodology
 -----------
 
-See VALIDATION_METHODOLOGY.md in this folder for complete methodology documentation.
+See VALIDATION_METHODOLOGY.md for complete methodology documentation.
 
 
 Data Sources
@@ -59,3 +59,4 @@ Data Sources
 Nuclear test dates: DOE/NV-209 Rev 16, Johnston's Archive
 Transient data: Provided by Dr. Stephen Bruehl
 VASCO catalog: VASCO project (Villarroel et al.)
+
