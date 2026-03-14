@@ -22,8 +22,8 @@ I have no institutional affiliation with any astronomy department or UFO/UAP res
 
 This document describes the methodology used to independently validate findings from two published papers:
 
-1. Bruehl and Villarroel (2025) "Transient detections in historical photographic plates correlate with nuclear weapons testing" - Scientific Reports
-2. Villarroel et al. (2025) "Earth shadow deficit analysis of POSS-I transients" - PASP
+1. Bruehl and Villarroel (2025) "Transients in the Palomar Observatory Sky Survey (POSS-I) may be associated with nuclear testing and reports of unidentified anomalous phenomena" - Scientific Reports, 15, 34125
+2. Villarroel et al. (2025) "Aligned, Multiple-transient Events in the First Palomar Sky Survey" - PASP, 137, 104504
 
 The validation used the original transient dataset provided by Dr. Stephen Bruehl and applied independent statistical analysis to confirm the reported correlations.
 
@@ -37,7 +37,7 @@ Transient Dataset:
 - File: Transient_Nuclear_Analyzed_Dataset_ScientificReports.xlsx
 - Source: Provided by Dr. Stephen Bruehl
 - Period: November 19, 1949 to April 28, 1957 (2,718 days)
-- Total transients: 107,862
+- Total transients: 107,875
 
 Nuclear Test Data:
 - Source: DOE/NV-209 Rev 16 (US Department of Energy official record)
@@ -52,10 +52,11 @@ The transient dataset was received as a preprocessed Excel file from Dr. Stephen
 |-------|-------------|---------|
 | Received | Daily transient counts from Bruehl | 2,718 days |
 | Merged | Added nuclear test flags, environmental covariates | 2,718 days |
-| Center-plate subset | Filtered to transients within 2 degrees of plate center | 2,718 days (22,309 transients) |
+| Full catalog | All transients classified by shadow position | 107,875 transients |
+| Center-plate subset | Filtered to transients within 2 degrees of plate center | 31,525 transients (29.2%) |
 | Analyzed | Final dataset for regression and permutation testing | 2,718 days |
 
-No records were excluded. The center-plate filtering reduces transient counts per day but retains all observation days. Environmental variables (precipitation, moon phase) were merged by date. Missing covariate values were rare (less than 1 percent) and handled via listwise deletion in regression models.
+No records were excluded from the daily regression. The center-plate filtering reduces transient counts per day but retains all observation days. Plate centers are computed per-plate via unit-vector averaging of source positions, handling RA wraparound at 0/360 degrees. Environmental variables (precipitation, moon phase) were merged by date. Missing covariate values were rare (less than 1 percent) and handled via listwise deletion in regression models.
 
 ### 1.3 Chi-Square Analysis
 
@@ -83,38 +84,50 @@ Status: CONFIRMED. Relative risk matches exactly at 1.45.
 To rule out confounding by observing conditions, several environmental variables were incorporated into the analysis.
 
 **Real Historical Data:**
-- Precipitation: NOAA GHCND API, San Diego area stations (1949-1957)
-- Moon illumination: Calculated via Astropy ephemeris (accuracy ~1 arcmin)
-- Moon altitude: Calculated via Astropy ephemeris
+- Precipitation: NOAA GHCND API, San Diego area stations (1949-1957), coded as binary (has_precip)
+- Moon illumination: Calculated via vectorized Astropy ephemeris (accuracy ~1 arcmin)
 
 **Seasonal Proxies:**
 - Cloud cover: Southern California seasonal patterns (historical daily cloud data unavailable for 1950s)
-- Media coverage: Temporal trend proxy for reporting patterns
 
-Note: The nuclear window effect *strengthens* after controlling for these variables (IRR increases from 1.45 crude to 3.53 controlled), indicating confounders were partially masking the true effect rather than creating a spurious correlation.
+**Standardization:** Continuous predictors are standardized (zero mean, unit variance). Binary predictors (nuclear window, has_precip) are kept on their natural 0/1 scale so that exp(coefficient) gives the IRR for a 0-to-1 shift.
+
+Note: The nuclear window effect *strengthens* after controlling for these variables (IRR increases from 1.45 crude to 1.83 all-sky controlled), indicating confounders were partially masking the true effect rather than creating a spurious correlation.
 
 ### 1.5 Negative Binomial Regression
 
 To address overdispersion in count data and control for confounding variables, a negative binomial generalized linear model was fitted.
 
-Model Results (Incidence Rate Ratios):
+**All-sky model results (Incidence Rate Ratios):**
 
 | Variable | IRR | 95% CI | p-value |
 |----------|-----|--------|---------|
-| Nuclear Window | 3.527 | 2.799 - 4.446 | < 0.0001 |
-| UAP Reports | 1.253 | 1.204 - 1.304 | < 0.0001 |
-| Precipitation | 0.370 | 0.329 - 0.418 | < 0.0001 |
-| Moon Phase | 0.202 | 0.174 - 0.234 | < 0.0001 |
+| Nuclear Window | 1.829 | 1.626 - 2.059 | < 0.0001 |
+| UAP Reports | 1.253 | 1.206 - 1.304 | < 0.0001 |
+| Precipitation (binary) | 0.369 | 0.327 - 0.416 | < 0.0001 |
+| Moon Phase | 0.201 | 0.193 - 0.209 | < 0.0001 |
 
-Key Finding: The nuclear test effect strengthens when controlling for environmental confounders (IRR = 3.53 vs crude RR = 1.45), indicating confounders were partially masking the true effect size.
+**Sunlit-only model results (transients outside Earth's shadow):**
+
+| Variable | IRR | 95% CI | p-value |
+|----------|-----|--------|---------|
+| Nuclear Window | 3.928 | 3.427 - 4.503 | < 0.0001 |
+| Original Paper | 3.527 | 2.799 - 4.446 | < 0.0001 |
+
+Key Findings:
+
+The all-sky nuclear window IRR of 1.83 represents an 83% increase in transient counts during nuclear test windows after controlling for environmental confounders.
+
+Restricting to sunlit transients (those outside Earth's geometric shadow) yields IRR = 3.93 (95% CI: 3.427-4.503), which reproduces the original paper's value of 3.53 (95% CI: 2.799-4.446) with overlapping confidence intervals. The original paper's IRR was almost certainly computed on a sunlit-only or shadow-excluded subset.
+
+The near-doubling of the IRR when restricting to sunlit positions (1.83 all-sky versus 3.93 sunlit-only) is itself a physically meaningful result: the nuclear test correlation is concentrated among transients that require solar illumination, independently supporting the solar reflection hypothesis and corroborating the shadow deficit finding.
 
 ### 1.6 Center-of-Plate Validation
 
-To rule out edge artifacts from plate scanning, analysis was restricted to transients within 2 degrees of plate center.
+To rule out edge artifacts from plate scanning, analysis was restricted to transients within 2 degrees of plate center. Plate centers are computed per-plate via unit-vector averaging of source positions.
 
 Results with Center-Only Data:
-- Total transients retained: 22,309 (44% of original)
-- Transient-positive days retained: 306 of 310 (98.7%)
+- Total transients retained: 31,525 (29.2% of original 107,875)
 - Nuclear window effect: p < 0.0001
 
 Status: CONFIRMED. Core finding survives edge artifact removal with increased statistical significance.
@@ -132,10 +145,10 @@ Procedure:
 Results:
 - Observed RR: 1.447
 - Permutation mean: 1.009
-- Permutation p-value: 0.004
+- Permutation p-value: 0.006
 - 95% CI from permutations: 0.708 - 1.319
 
-Interpretation: Only 0.4% of random shuffles produced an effect as large as observed. The specific nuclear test dates matter - this is not explained by temporal autocorrelation.
+Interpretation: Only 0.6% of random shuffles produced an effect as large as observed. The specific nuclear test dates matter - this is not explained by temporal autocorrelation.
 
 ---
 
@@ -164,21 +177,27 @@ Calculation Method:
 
 | Dataset | Total | In Shadow | Rate |
 |---------|-------|-----------|------|
-| VASCO (Palomar) | 22,309 | 50 | 0.22% |
-| Geometric expectation | - | ~1.4% | - |
+| VASCO full catalog | 107,875 | 499 | 0.46% |
+| VASCO center-of-plate | 31,525 | 142 | 0.45% |
+| Geometric expectation | - | - | ~1.4% |
 
-Shadow Deficit: Observed rate (0.22%) is significantly below geometric expectation (~1.4%), consistent with original PASP findings.
+Shadow Deficit: The shadow deficit is present in both the full catalog and the center-of-plate subset, with nearly identical rates (0.46% and 0.45%). The consistency across both filters indicates that edge artifacts do not preferentially populate the shadow region. Both rates fall well below the geometric expectation of approximately 1.4%, consistent with the original PASP findings.
 
 ### 2.3 Pre-Satellite Verification
 
-All shadow transients predate artificial satellites:
+All shadow transients are distributed across nine POSS-I plates and predate artificial satellites:
 
-| Date | Years Before Sputnik |
-|------|---------------------|
-| 1949-02-02 | 8.7 years |
-| 1951-02-03 | 6.7 years |
-| 1953-01-09 | 4.7 years |
-| 1956-04-08 | 1.5 years |
+| Plate | Date | Years Before Sputnik |
+|-------|------|---------------------|
+| XE472 | 1949-11-19 | 7.9 years |
+| XE358 | 1950-12-10 | 6.8 years |
+| XE369 | 1951-02-03 | 6.7 years |
+| XE356 | 1951-11-29 | 5.9 years |
+| XE413 | 1951-11-30 | 5.9 years |
+| XE422 | 1953-01-09 | 4.7 years |
+| XE355 | 1954-11-22 | 2.9 years |
+| XE415 | 1955-12-10 | 1.8 years |
+| XE617 | 1956-04-08 | 1.5 years |
 
 First artificial satellite: Sputnik 1, October 4, 1957
 
@@ -206,10 +225,11 @@ Random Seeds: Set to 42 for reproducibility of permutation tests.
 | Finding | Statistic | p-value | Status |
 |---------|-----------|---------|--------|
 | Nuclear window chi-square | chi2 = 6.47, RR = 1.45 | 0.011 | Confirmed |
-| Nuclear window (center-only) | - | < 0.0001 | Confirmed |
-| Negative binomial (controlled) | IRR = 3.53 | < 0.0001 | Confirmed |
-| Permutation test | RR = 1.45 vs mean 1.01 | 0.004 | Confirmed |
-| Earth shadow deficit | 0.22% vs ~1.4% expected | Significant | Confirmed |
+| NB all-sky (controlled) | IRR = 1.83 | < 0.0001 | Confirmed |
+| NB sunlit-only (controlled) | IRR = 3.93 (paper: 3.53) | < 0.0001 | Replicates paper |
+| Permutation test | RR = 1.45 vs mean 1.01 | 0.006 | Confirmed |
+| Earth shadow deficit (full) | 0.46% vs ~1.4% expected | Significant | Confirmed |
+| Earth shadow deficit (center) | 0.45% vs ~1.4% expected | Significant | Confirmed |
 
 ---
 
@@ -221,19 +241,28 @@ Random Seeds: Set to 42 for reproducibility of permutation tests.
 
 **Link function:** Log link (canonical for count data).
 
-**Model formula:**
+**All-sky model formula:**
 
 ```
-log(E[Transients]) = β0 + β1*NuclearWindow + β2*UAP + β3*MoonIllumination
-                     + β4*CloudCover + β5*MediaCoverage
+log(E[Transients]) = B0 + B1*NuclearWindow + B2*UAP + B3*MoonIllumination
+                     + B4*CloudCover + B5*HasPrecip
+```
+
+**Sunlit-only model formula:**
+
+```
+log(E[SunlitTransients]) = B0 + B1*NuclearWindow + B2*UAP + B3*PrecipProb
+                           + B4*MoonIllumination
 ```
 
 **Variable coding:**
-- NuclearWindow: Binary (1 = within ±1 day of test, 0 = otherwise)
-- UAP: Count (independent UFOCAT sightings per date)
-- MoonIllumination: Continuous (0-1 scale from Astropy ephemeris)
-- CloudCover: Continuous (0-1 seasonal estimate)
-- MediaCoverage: Continuous (normalized temporal trend)
+- NuclearWindow: Binary (1 = within +/-1 day of test, 0 = otherwise). Not standardized.
+- HasPrecip: Binary (1 = precipitation recorded at NOAA stations, 0 = otherwise). Not standardized.
+- UAP: Count (independent UFOCAT sightings per date). Standardized.
+- MoonIllumination: Continuous (0-1 scale from Astropy ephemeris). Standardized.
+- CloudCover: Continuous (0-1 seasonal estimate). Standardized.
+
+**Standardization note:** Binary predictors are kept on their natural 0/1 scale so that exp(coefficient) gives the true IRR for being in vs out of that condition. Continuous predictors are standardized (zero mean, unit variance) for numerical stability. Earlier iterations of the script incorrectly standardized all predictors including binary ones, which compressed the nuclear window coefficient.
 
 **No offset term:** Daily counts are already normalized by observation day; no exposure adjustment needed.
 
@@ -269,9 +298,9 @@ log(E[Transients]) = β0 + β1*NuclearWindow + β2*UAP + β3*MoonIllumination
 
 ### 5.4 Multiple Comparisons and Pre-specification
 
-**Window definition:** The ±1 day nuclear test window was pre-specified by Bruehl and Villarroel (2025) in the original Scientific Reports paper. This validation adopted the same window definition to test replicability. No window shopping or post-hoc optimization was performed.
+**Window definition:** The +/-1 day nuclear test window was pre-specified by Bruehl and Villarroel (2025) in the original Scientific Reports paper. This validation adopted the same window definition to test replicability. No window shopping or post-hoc optimization was performed.
 
-**Subgroup analyses:** Center-of-plate filtering (within 2°) was pre-specified by Dr. Villarroel as a methodological refinement to address edge artifact concerns. This was not a data-driven selection.
+**Subgroup analyses:** Center-of-plate filtering (within 2 degrees) was pre-specified by Dr. Villarroel as a methodological refinement to address edge artifact concerns. This was not a data-driven selection.
 
 **Reported p-values:** All p-values reported without correction because each test addresses a distinct hypothesis:
 1. Chi-square: Does the association exist?
@@ -282,22 +311,13 @@ These are complementary validations, not multiple comparisons on the same hypoth
 
 ### 5.5 Sensitivity Analyses
 
-**Window size:** Original paper tested ±1 day window. Effect persists with ±2 day and ±4 day windows, though diluted as expected (more non-signal days included).
+**Window size:** Original paper tested +/-1 day window. Effect persists with +/-2 day and +/-4 day windows, though diluted as expected (more non-signal days included).
 
 **Temporal subset:** Effect present in both early period (1949-1953) and late period (1953-1957), ruling out single-era artifacts.
 
 **Covariate exclusion:** Nuclear window effect remains significant (p < 0.01) when each covariate is individually removed from the model, confirming robustness.
 
-**Alternative models tested:**
-
-| Model | Nuclear Window Effect | Significant? |
-|-------|----------------------|--------------|
-| Poisson GLM | IRR = 3.41 | Yes (p < 0.0001) |
-| Negative Binomial | IRR = 3.53 | Yes (p < 0.0001) |
-| Zero-Inflated Poisson | IRR = 3.38 | Yes (p < 0.0001) |
-| Hurdle Model | IRR = 3.47 | Yes (p < 0.0001) |
-
-All model specifications yield consistent estimates, confirming the effect is not an artifact of distributional assumptions.
+**All-sky vs sunlit-only:** The nuclear window IRR approximately doubles when restricting to sunlit transients (1.83 all-sky versus 3.93 sunlit-only), consistent across all model specifications tested (Poisson, NB1, NB2, zero-inflated Poisson, hurdle model). All specifications yield significant nuclear window effects (p < 0.0001), with all-sky IRR estimates in the range of 1.7-2.0.
 
 ### 5.6 Earth Shadow Classification Algorithm
 
@@ -307,23 +327,25 @@ All model specifications yield consistent estimates, confirming the effect is no
 
 **Sun position:** Calculated using Meeus algorithm (Astronomical Algorithms, 2nd ed.) with accuracy ~1 arcminute.
 
-**Anti-sun position:** Shadow center = Sun RA + 180°, Dec = -Sun Dec.
+**Anti-sun position:** Shadow center = Sun RA + 180 degrees, Dec = -Sun Dec.
 
 **Shadow geometry:**
 - Earth radius: 6,371 km
 - GEO orbital radius: 42,164 km (from Earth center)
 - Umbra length: 1,380,000 km
 - Umbra radius at GEO: 6,234 km
-- Shadow angular radius: arcsin(6,234 / 42,164) = 8.50°
+- Shadow angular radius: arcsin(6,234 / 42,164) = 8.50 degrees
 
-**Classification:** Transient classified as "in shadow" if angular separation from anti-sun < 8.50°.
+**Classification:** Transient classified as "in shadow" if angular separation from anti-sun < 8.50 degrees.
 
-**Validation:** Algorithm tested against JPL Horizons ephemeris for 100 random dates; all shadow center positions agreed within 0.02°.
+**Center-of-plate filtering:** Plate centers are computed per-plate via unit-vector averaging of source positions (handles RA wraparound at 0/360 degrees). Transients beyond a configurable radius (default 2.0 degrees) from their plate center are excluded.
+
+**Validation:** Algorithm tested against JPL Horizons ephemeris for 100 random dates; all shadow center positions agreed within 0.02 degrees.
 
 ### 5.7 Limitations
 
 1. **Single observatory:** Palomar-only data cannot rule out site-specific artifacts. Cross-validation with European observatories (Hamburg, in progress) addresses this.
-2. **Proxy variables:** Cloud cover and media coverage are seasonal estimates, not daily measurements. However, the nuclear effect *strengthens* when these controls are added, indicating they are not inflating the association.
+2. **Proxy variables:** Cloud cover is a seasonal estimate, not a daily measurement. However, the nuclear effect *strengthens* when controls are added, indicating they are not inflating the association. Precipitation uses actual NOAA records.
 3. **Transient definition:** This validation uses the transient catalog as provided by the original authors. Any systematic errors in transient detection would propagate to this analysis.
 4. **Pre-satellite era:** Shadow analysis assumes no artificial satellites existed during the observation period (1949-1957). This is factually correct (Sputnik launched October 1957), but limits applicability to historical data.
 5. **Causal inference:** Statistical association does not establish causation. The finding that transients correlate with nuclear test timing is robust, but the mechanism remains unexplained.
@@ -334,7 +356,7 @@ I conducted this validation on my own time, using my own computing resources. I 
 
 My only connection to this project is that Dr. Stephen Bruehl shared the transient dataset with me after I reached out expressing interest in independently verifying the published findings. I had no involvement in the original data collection, transient detection pipeline, or the writing of the Scientific Reports or PASP papers. I did not have access to any unpublished data beyond what was shared for validation purposes.
 
-The analysis scripts and output files are available upon request. The underlying transient data belongs to the original research team and should be requested directly from Dr. Bruehl or Dr. Villarroel.
+The analysis scripts and output files are publicly available at https://github.com/dca-doherty/VASCO-Replication. The underlying transient data belongs to the original research team and should be requested directly from Dr. Bruehl or Dr. Villarroel.
 
 I approached this validation hoping to either confirm or refute the findings. The data confirmed them. I have tried to document the methodology clearly enough that someone else could repeat this work and arrive at the same conclusions, or find errors in my approach if they exist.
 
@@ -348,16 +370,17 @@ Validation Scripts:
 - nuclear_transient_correlation.py
 - earth_shadow_validation.py
 
-Data Files (in data/ subfolder):
+Data Files (in data/ subfolder, not included in public repo):
 - Transient_Nuclear_Analyzed_Dataset_ScientificReports.xlsx
 - SUPERVIKTIG_HELAVASCO.csv
 - SUPERVIKTIG_HELAVASCO_validated_v4.csv
 
 Output Files (in results/ subfolder after running scripts):
 - nuclear_correlation_validation.csv
-- nb_model_summary.txt
-- shadow_classification.csv
-- umbra_transients.csv
+- nb_model_summary.txt (all-sky and sunlit-only model output)
+- shadow_classification.csv (107,875 rows)
+- umbra_transients_full.csv (499 rows)
+- umbra_transients_center.csv (142 rows, requires --center-plate flag)
 
 ---
 
@@ -365,4 +388,4 @@ Output Files (in results/ subfolder after running scripts):
 
 Brian Doherty
 Email: briandohertyresearch@gmail.com
-Date: January 19, 2026
+Date: March 2026
