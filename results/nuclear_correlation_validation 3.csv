@@ -1,0 +1,5 @@
+test,statistic,p_value,status
+Chi-square,"chi2=6.473, RR=1.45",0.01095375698223428,Confirmed
+NB all-sky (controlled),IRR=1.829,1.1718438199395635e-23,Confirmed
+Permutation,RR=1.447,0.0056,Robust
+NB sunlit-only (controlled),IRR=3.928 (95% CI: 3.427-4.503),6.925603488276018e-86,Replicates paper IRR=3.527

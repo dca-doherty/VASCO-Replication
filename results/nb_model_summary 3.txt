@@ -1,0 +1,46 @@
+ALL-SKY TRANSIENTS
+==============================================================================
+                 Generalized Linear Model Regression Results                  
+==============================================================================
+Dep. Variable:       Total_Transients   No. Observations:                 2718
+Model:                            GLM   Df Residuals:                     2712
+Model Family:        NegativeBinomial   Df Model:                            5
+Link Function:                    Log   Scale:                          1.0000
+Method:                          IRLS   Log-Likelihood:                -10658.
+Date:                Sat, 14 Mar 2026   Deviance:                       17374.
+Time:                        04:14:48   Pearson chi2:                 6.35e+04
+No. Iterations:                    18   Pseudo R-squ. (CS):             0.7865
+Covariance Type:            nonrobust                                         
+==============================================================================================================
+                                                 coef    std err          z      P>|z|      [0.025      0.975]
+--------------------------------------------------------------------------------------------------------------
+const                                          2.9392      0.024    123.638      0.000       2.893       2.986
+Nuclear_Testing_YN_Window_Plus_Minus_1_Day     0.6039      0.060     10.026      0.000       0.486       0.722
+Independent_UFOCAT_Sightings_Per_Date          0.2259      0.020     11.102      0.000       0.186       0.266
+moon_illumination                             -1.6047      0.021    -76.024      0.000      -1.646      -1.563
+cloud_cover_estimate                          -0.0579      0.021     -2.730      0.006      -0.099      -0.016
+has_precip                                    -0.9980      0.061    -16.429      0.000      -1.117      -0.879
+==============================================================================================================
+
+SUNLIT-ONLY TRANSIENTS (replicates paper IRR=3.527)
+==============================================================================
+                 Generalized Linear Model Regression Results                  
+==============================================================================
+Dep. Variable:      Sunlit_Transients   No. Observations:                 2718
+Model:                            GLM   Df Residuals:                     2713
+Model Family:        NegativeBinomial   Df Model:                            4
+Link Function:                    Log   Scale:                          1.0000
+Method:                          IRLS   Log-Likelihood:                -5230.1
+Date:                Sat, 14 Mar 2026   Deviance:                       9418.0
+Time:                        04:14:48   Pearson chi2:                 1.05e+05
+No. Iterations:                    20   Pseudo R-squ. (CS):             0.8634
+Covariance Type:            nonrobust                                         
+==============================================================================================================
+                                                 coef    std err          z      P>|z|      [0.025      0.975]
+--------------------------------------------------------------------------------------------------------------
+const                                          0.1178      0.036      3.265      0.001       0.047       0.188
+Nuclear_Testing_YN_Window_Plus_Minus_1_Day     1.3682      0.070     19.641      0.000       1.232       1.505
+Independent_UFOCAT_Sightings_Per_Date          0.4965      0.024     21.126      0.000       0.450       0.543
+precip_prob                                   -0.9114      0.029    -31.187      0.000      -0.969      -0.854
+moon_illumination                             -1.8112      0.032    -56.144      0.000      -1.874      -1.748
+==============================================================================================================
