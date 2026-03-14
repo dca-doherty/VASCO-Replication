@@ -1,0 +1,47 @@
+ALL-SKY TRANSIENTS
+==============================================================================
+                 Generalized Linear Model Regression Results                  
+==============================================================================
+Dep. Variable:       Total_Transients   No. Observations:                 2718
+Model:                            GLM   Df Residuals:                     2712
+Model Family:        NegativeBinomial   Df Model:                            5
+Link Function:                    Log   Scale:                          1.0000
+Method:                          IRLS   Log-Likelihood:                -10506.
+Date:                Sat, 14 Mar 2026   Deviance:                       17070.
+Time:                        05:30:22   Pearson chi2:                 6.73e+04
+No. Iterations:                    18   Pseudo R-squ. (CS):             0.8091
+Covariance Type:            nonrobust                                         
+==============================================================================================================
+                                                 coef    std err          z      P>|z|      [0.025      0.975]
+--------------------------------------------------------------------------------------------------------------
+const                                          2.9122      0.024    122.406      0.000       2.866       2.959
+Nuclear_Testing_YN_Window_Plus_Minus_1_Day     0.5895      0.060      9.763      0.000       0.471       0.708
+Independent_UFOCAT_Sightings_Per_Date          0.2880      0.020     14.325      0.000       0.249       0.327
+moon_illumination                             -1.5453      0.021    -72.899      0.000      -1.587      -1.504
+cloud_cover                                   -0.3761      0.021    -18.292      0.000      -0.416      -0.336
+has_precip                                    -1.2118      0.061    -19.936      0.000      -1.331      -1.093
+==============================================================================================================
+
+SUNLIT-ONLY TRANSIENTS (replicates paper IRR=3.527)
+==============================================================================
+                 Generalized Linear Model Regression Results                  
+==============================================================================
+Dep. Variable:      Sunlit_Transients   No. Observations:                 2718
+Model:                            GLM   Df Residuals:                     2712
+Model Family:        NegativeBinomial   Df Model:                            5
+Link Function:                    Log   Scale:                          1.0000
+Method:                          IRLS   Log-Likelihood:                -5199.1
+Date:                Sat, 14 Mar 2026   Deviance:                       9355.9
+Time:                        05:30:22   Pearson chi2:                 1.15e+05
+No. Iterations:                    21   Pseudo R-squ. (CS):             0.8665
+Covariance Type:            nonrobust                                         
+==============================================================================================================
+                                                 coef    std err          z      P>|z|      [0.025      0.975]
+--------------------------------------------------------------------------------------------------------------
+const                                          0.1099      0.036      3.068      0.002       0.040       0.180
+Nuclear_Testing_YN_Window_Plus_Minus_1_Day     1.3816      0.069     19.898      0.000       1.245       1.518
+Independent_UFOCAT_Sightings_Per_Date          0.5219      0.023     22.242      0.000       0.476       0.568
+precip_prob                                   -0.9389      0.030    -31.602      0.000      -0.997      -0.881
+moon_illumination                             -1.7387      0.032    -54.682      0.000      -1.801      -1.676
+cloud_cover                                   -0.2279      0.027     -8.511      0.000      -0.280      -0.175
+==============================================================================================================

@@ -1,0 +1,8 @@
+Plate-by-plate shadow coverage calculation
+Shadow cone radius: 8.4236 deg
+Plate field radius: 2.0 deg
+Number of plates: 635
+Total plate area: 7979.65 sq deg
+Total shadow overlap area: 62.3749 sq deg
+Expected shadow fraction: 0.007817 (0.7817%)
+Plates with shadow overlap: 9

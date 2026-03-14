@@ -1,0 +1,8 @@
+test,statistic,p_value,status
+Chi-square,"chi2=6.473, RR=1.45",0.01095375698223428,Confirmed
+NB all-sky (controlled),IRR=1.803,1.6173887283069688e-22,Confirmed
+IID permutation,RR=1.447,0.0056,Robust
+Block permutation (30-day),"RR=1.447, null CI=[0.628,1.480]",0.0359,Robust
+Block permutation (60-day),"RR=1.447, null CI=[0.575,1.480]",0.0341,Robust
+Block permutation (90-day),"RR=1.447, null CI=[0.601,1.546]",0.0527,Not robust
+NB sunlit-only (controlled),IRR=3.981 (95% CI: 3.475-4.562),4.219430485455624e-88,Replicates paper IRR=3.527
