@@ -24,7 +24,9 @@ The data folder contains the original research datasets and is not included in t
 The scripts expect three files in the data folder:
 
 `Transient_Nuclear_Analyzed_Dataset_ScientificReports.xlsx` Original transient dataset from Dr. Bruehl, containing daily transient counts from POSS-I plates (November 1949 through April 1957, 2,718 days)
+
 `SUPERVIKTIG_HELAVASCO.csv` VASCO transient catalog with source positions and plate metadata
+
 `SUPERVIKTIG_HELAVASCO_validated_v4.csv` Validated subset of the VASCO catalog
 
 ## Requirements
@@ -70,6 +72,7 @@ Loads the original Bruehl dataset and runs three independent tests of the nuclea
 **Test 3: Permutation test.** Randomly shuffles nuclear test date assignments 10,000 times, recalculates relative risk each time, and compares the observed value to the null distribution. This confirms whether the specific test dates matter or whether any random set of dates would produce a similar effect.
 
 Output files
+
 `results/nuclear_correlation_validation.csv` -- Summary statistics
 `results/nb_model_summary.txt` -- Full negative binomial model output
 
@@ -80,6 +83,7 @@ Classifies each VASCO transient by whether its sky position falls inside Earth's
 The script calculates the Sun position for each observation time using standard astronomical algorithms, computes the anti-sun point (shadow center), and measures the angular distance from each transient to the shadow center. Transients within the shadow radius at GEO altitude (approximately 8.5 degrees) are flagged.
 
 Output files
+
 `results/shadow_classification.csv` -- Full classification of all transients
 `results/umbra_transients.csv` -- Only the transients falling inside the shadow
 
@@ -118,6 +122,7 @@ Only 0.4% of random shuffles produced a relative risk as large as the observed v
 ### Center-of-Plate Validation
 
 Restricting to transients within 2 degrees of plate center (eliminating edge artifacts):
+
 Transients retained: 22,309 (44% of original)
 Transient-positive days retained: 306 of 310 (98.7%)
 Nuclear window effect: p < 0.0001
