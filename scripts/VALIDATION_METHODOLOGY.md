@@ -1,7 +1,6 @@
 # Methodology: Independent Validation of Bruehl and Villarroel Findings
 
 Brian Doherty, Independent Researcher
-January 2026
 Contact: briandohertyresearch@gmail.com
 
 ---
@@ -85,14 +84,12 @@ To rule out confounding by observing conditions, several environmental variables
 
 **Real Historical Data:**
 - Precipitation: NOAA GHCND API, San Diego area stations (1949-1957), coded as binary (has_precip)
+- Cloud cover: Daily mean from NOAA Integrated Surface Database (ISD), San Diego station WBAN 23188, parsed from hourly sky condition reports (GF1 field, oktas converted to 0-1 scale). 3,287 daily records with zero missing days.
 - Moon illumination: Calculated via vectorized Astropy ephemeris (accuracy ~1 arcmin)
-
-**Seasonal Proxies:**
-- Cloud cover: Southern California seasonal patterns (historical daily cloud data unavailable for 1950s)
 
 **Standardization:** Continuous predictors are standardized (zero mean, unit variance). Binary predictors (nuclear window, has_precip) are kept on their natural 0/1 scale so that exp(coefficient) gives the IRR for a 0-to-1 shift.
 
-Note: The nuclear window effect *strengthens* after controlling for these variables (IRR increases from 1.45 crude to 1.83 all-sky controlled), indicating confounders were partially masking the true effect rather than creating a spurious correlation.
+Note: The nuclear window effect *strengthens* after controlling for these variables (IRR increases from 1.45 crude to 1.80 all-sky controlled), indicating confounders were partially masking the true effect rather than creating a spurious correlation.
 
 ### 1.5 Negative Binomial Regression
 
@@ -102,7 +99,7 @@ To address overdispersion in count data and control for confounding variables, a
 
 | Variable | IRR | 95% CI | p-value |
 |----------|-----|--------|---------|
-| Nuclear Window | 1.829 | 1.626 - 2.059 | < 0.0001 |
+| Nuclear Window | 1.803 | 1.601 - 2.030 | < 0.0001 |
 | UAP Reports | 1.253 | 1.206 - 1.304 | < 0.0001 |
 | Precipitation (binary) | 0.369 | 0.327 - 0.416 | < 0.0001 |
 | Moon Phase | 0.201 | 0.193 - 0.209 | < 0.0001 |
@@ -111,16 +108,16 @@ To address overdispersion in count data and control for confounding variables, a
 
 | Variable | IRR | 95% CI | p-value |
 |----------|-----|--------|---------|
-| Nuclear Window | 3.928 | 3.427 - 4.503 | < 0.0001 |
+| Nuclear Window | 3.981 | 3.475 - 4.562 | < 0.0001 |
 | Original Paper | 3.527 | 2.799 - 4.446 | < 0.0001 |
 
 Key Findings:
 
-The all-sky nuclear window IRR of 1.83 represents an 83% increase in transient counts during nuclear test windows after controlling for environmental confounders.
+The all-sky nuclear window IRR of 1.80 represents an 80% increase in transient counts during nuclear test windows after controlling for environmental confounders.
 
-Restricting to sunlit transients (those outside Earth's geometric shadow) yields IRR = 3.93 (95% CI: 3.427-4.503), which reproduces the original paper's value of 3.53 (95% CI: 2.799-4.446) with overlapping confidence intervals. The original paper's IRR was almost certainly computed on a sunlit-only or shadow-excluded subset.
+Restricting to sunlit transients (those outside Earth's geometric shadow) yields IRR = 3.98 (95% CI: 3.475-4.562), which reproduces the original paper's value of 3.53 (95% CI: 2.799-4.446) with overlapping confidence intervals. The original paper's IRR was almost certainly computed on a sunlit-only or shadow-excluded subset.
 
-The near-doubling of the IRR when restricting to sunlit positions (1.83 all-sky versus 3.93 sunlit-only) is itself a physically meaningful result: the nuclear test correlation is concentrated among transients that require solar illumination, independently supporting the solar reflection hypothesis and corroborating the shadow deficit finding.
+The near-doubling of the IRR when restricting to sunlit positions (1.80 all-sky versus 3.98 sunlit-only) is itself a physically meaningful result: the nuclear test correlation is concentrated among transients that require solar illumination, independently supporting the solar reflection hypothesis and corroborating the shadow deficit finding.
 
 ### 1.6 Center-of-Plate Validation
 
@@ -225,8 +222,8 @@ Random Seeds: Set to 42 for reproducibility of permutation tests.
 | Finding | Statistic | p-value | Status |
 |---------|-----------|---------|--------|
 | Nuclear window chi-square | chi2 = 6.47, RR = 1.45 | 0.011 | Confirmed |
-| NB all-sky (controlled) | IRR = 1.83 | < 0.0001 | Confirmed |
-| NB sunlit-only (controlled) | IRR = 3.93 (paper: 3.53) | < 0.0001 | Replicates paper |
+| NB all-sky (controlled) | IRR = 1.80 | < 0.0001 | Confirmed |
+| NB sunlit-only (controlled) | IRR = 3.98 (paper: 3.53) | < 0.0001 | Replicates paper |
 | Permutation test | RR = 1.45 vs mean 1.01 | 0.006 | Confirmed |
 | Earth shadow deficit (full) | 0.46% vs ~1.4% expected | Significant | Confirmed |
 | Earth shadow deficit (center) | 0.45% vs ~1.4% expected | Significant | Confirmed |
@@ -260,7 +257,7 @@ log(E[SunlitTransients]) = B0 + B1*NuclearWindow + B2*UAP + B3*PrecipProb
 - HasPrecip: Binary (1 = precipitation recorded at NOAA stations, 0 = otherwise). Not standardized.
 - UAP: Count (independent UFOCAT sightings per date). Standardized.
 - MoonIllumination: Continuous (0-1 scale from Astropy ephemeris). Standardized.
-- CloudCover: Continuous (0-1 seasonal estimate). Standardized.
+- CloudCover: Continuous (0-1 daily mean from NOAA ISD hourly reports). Standardized.
 
 **Standardization note:** Binary predictors are kept on their natural 0/1 scale so that exp(coefficient) gives the true IRR for being in vs out of that condition. Continuous predictors are standardized (zero mean, unit variance) for numerical stability. Earlier iterations of the script incorrectly standardized all predictors including binary ones, which compressed the nuclear window coefficient.
 
@@ -317,7 +314,7 @@ These are complementary validations, not multiple comparisons on the same hypoth
 
 **Covariate exclusion:** Nuclear window effect remains significant (p < 0.01) when each covariate is individually removed from the model, confirming robustness.
 
-**All-sky vs sunlit-only:** The nuclear window IRR approximately doubles when restricting to sunlit transients (1.83 all-sky versus 3.93 sunlit-only), consistent across all model specifications tested (Poisson, NB1, NB2, zero-inflated Poisson, hurdle model). All specifications yield significant nuclear window effects (p < 0.0001), with all-sky IRR estimates in the range of 1.7-2.0.
+**All-sky vs sunlit-only:** The nuclear window IRR approximately doubles when restricting to sunlit transients (1.80 all-sky versus 3.98 sunlit-only), consistent across all model specifications tested (Poisson, NB1, NB2, zero-inflated Poisson, hurdle model). All specifications yield significant nuclear window effects (p < 0.0001), with all-sky IRR estimates in the range of 1.7-2.0.
 
 ### 5.6 Earth Shadow Classification Algorithm
 
@@ -345,7 +342,7 @@ These are complementary validations, not multiple comparisons on the same hypoth
 ### 5.7 Limitations
 
 1. **Single observatory:** Palomar-only data cannot rule out site-specific artifacts. Cross-validation with European observatories (Hamburg, in progress) addresses this.
-2. **Proxy variables:** Cloud cover is a seasonal estimate, not a daily measurement. However, the nuclear effect *strengthens* when controls are added, indicating they are not inflating the association. Precipitation uses actual NOAA records.
+2. **Environmental controls:** Cloud cover and precipitation use real NOAA station data from San Diego, approximately 100 km from Palomar. Conditions at the observatory may differ from the coastal station, particularly for marine layer cloud cover. However, the nuclear effect persists with or without these controls, indicating the finding is not driven by environmental confounding.
 3. **Transient definition:** This validation uses the transient catalog as provided by the original authors. Any systematic errors in transient detection would propagate to this analysis.
 4. **Pre-satellite era:** Shadow analysis assumes no artificial satellites existed during the observation period (1949-1957). This is factually correct (Sputnik launched October 1957), but limits applicability to historical data.
 5. **Causal inference:** Statistical association does not establish causation. The finding that transients correlate with nuclear test timing is robust, but the mechanism remains unexplained.
@@ -366,26 +363,17 @@ I approached this validation hoping to either confirm or refute the findings. Th
 
 This validation package is self-contained in this folder.
 
-Validation Scripts:
+Validation Scripts
 - nuclear_transient_correlation.py
 - earth_shadow_validation.py
 
-Data Files (in data/ subfolder, not included in public repo):
+Data Files (in data/ subfolder, not included in public repo)
 - Transient_Nuclear_Analyzed_Dataset_ScientificReports.xlsx
 - SUPERVIKTIG_HELAVASCO.csv
 - SUPERVIKTIG_HELAVASCO_validated_v4.csv
 
-Output Files (in results/ subfolder after running scripts):
+Output Files (in results/ subfolder after running)
 - nuclear_correlation_validation.csv
 - nb_model_summary.txt (all-sky and sunlit-only model output)
-- shadow_classification.csv (107,875 rows)
 - umbra_transients_full.csv (499 rows)
 - umbra_transients_center.csv (142 rows, requires --center-plate flag)
-
----
-
-## 7. Contact
-
-Brian Doherty
-Email: briandohertyresearch@gmail.com
-Date: March 2026
