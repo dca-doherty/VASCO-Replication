@@ -1,12 +1,9 @@
-# Validation Replication Package
+# Validation Replication
 
 Independent validation of core findings from Bruehl and Villarroel (2025), "Transients in the Palomar Observatory Sky Survey (POSS-I) may be associated with nuclear testing and reports of unidentified anomalous phenomena," published in Scientific Reports.
 
 Author: Brian Doherty
 Contact: briandohertyresearch@gmail.com
-Date: January 2026
-
---
 
 ## Purpose
 
@@ -80,7 +77,7 @@ Output files
 
 ### earth_shadow_validation.py
 
-Classifies each VASCO transient by whether its sky position falls inside Earth's geometric shadow at geostationary orbit altitude. Objects inside the shadow cannot reflect sunlight, so a deficit of transients in the shadow region has implications for what the transients physically are.
+Classifies each VASCO transient by whether its sky position falls inside Earth's geometric shadow at geosynchronous orbit altitude. Objects inside the shadow cannot reflect sunlight, so a deficit of transients in the shadow region has implications for what the transients physically are.
 
 The script calculates the Sun position for each observation time using standard astronomical algorithms, computes the anti-sun point (shadow center), and measures the angular distance from each transient to the shadow center. Transients within the shadow radius at GEO altitude (approximately 8.5 degrees) are flagged.
 
@@ -114,7 +111,7 @@ The relative risk matches exactly. The small difference in chi-square likely ref
 
 | Variable | IRR | 95% CI | p-value |
 |----------|-----|--------|---------|
-| Nuclear Window | 1.829 | 1.626 - 2.059 | < 0.0001 |
+| Nuclear Window | 1.803 | 1.601 - 2.030 | < 0.0001 |
 | UAP Reports | 1.253 | 1.206 - 1.304 | < 0.0001 |
 | Precipitation (binary) | 0.369 | 0.327 - 0.416 | < 0.0001 |
 | Moon Phase | 0.201 | 0.193 - 0.209 | < 0.0001 |
@@ -123,10 +120,10 @@ The relative risk matches exactly. The small difference in chi-square likely ref
 
 | Variable | IRR | 95% CI | p-value |
 |----------|-----|--------|---------|
-| Nuclear Window | 3.928 | 3.427 - 4.503 | < 0.0001 |
+| Nuclear Window | 3.981 | 3.475 - 4.562 | < 0.0001 |
 | Original Paper | 3.527 | 2.799 - 4.446 | < 0.0001 |
 
-The original paper's IRR of 3.527 was computed on sunlit-only transients -- those outside Earth's geometric shadow. Our sunlit-only IRR of 3.928 reproduces this with overlapping confidence intervals. The near-doubling of the IRR when restricting to sunlit positions (1.829 all-sky versus 3.928 sunlit-only) is itself a finding: the nuclear test correlation is concentrated among transients that require solar illumination, supporting the solar reflection hypothesis.
+The original paper's IRR of 3.527 was computed on sunlit-only transients -- those outside Earth's geometric shadow. Our sunlit-only IRR of 3.981 reproduces this with overlapping confidence intervals. The near-doubling of the IRR when restricting to sunlit positions (1.803 all-sky versus 3.981 sunlit-only) is itself a finding: the nuclear test correlation is concentrated among transients that require solar illumination, supporting the solar reflection hypothesis.
 
 ### Permutation Test
 
@@ -158,6 +155,7 @@ Transient data: Provided by Dr. Stephen Bruehl (Vanderbilt University Medical Ce
 VASCO catalog: VASCO project (Villarroel et al.)
 Solar position calculations: Astropy library using standard Meeus algorithms
 Precipitation data: NOAA GHCND API, San Diego area stations (1949-1957)
+Cloud cover data: NOAA Integrated Surface Database (ISD), San Diego WBAN 23188 (1949-1957)
 
 ## Citation
 
@@ -168,8 +166,3 @@ Bruehl, S. and Villarroel, B. (2025). "Transients in the Palomar Observatory Sky
 Villarroel, B., Solano, E., Guergouri, H., et al. (2025). "Aligned, Multiple-transient Events in the First Palomar Sky Survey." Publications of the Astronomical Society of the Pacific, 137, 104504.
 
 Solano, E., Villarroel, B., and Rodrigo, C. (2022). "Discovering vanishing objects in POSS I red images using the Virtual Observatory." Monthly Notices of the Royal Astronomical Society, 515, 1380-1391.
-
-## Contact
-
-Brian Doherty
-briandohertyresearch@gmail.com
